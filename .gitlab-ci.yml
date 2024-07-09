@@ -16,7 +16,14 @@ test:
     stage: test
     script:
         - cd ${CI_PROJECT_DIR}
-        - ./assignment-autotest/docker/docker-run-test.sh
+        IMAGE_NAME="cuaesd/aesd-autotest:local"
+        if ! docker image inspect "$IMAGE_NAME" > /dev/null 2>&1; then
+          echo "Image not found locally. Pulling from remote repository..."
+          - ./assignment-autotest/docker/docker-run-test.sh
+        else
+          echo "Image found locally. Skipping pull."
+        fi
+        
 
     artifacts:
         paths:
